@@ -1,0 +1,23 @@
+doctype 5
+html
+  head
+    if title
+      title #{title} - TLV.js
+    else
+      title TLV.js
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.0/css/font-awesome.min.css')
+    != css('style.css')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js')
+    block script
+
+  body
+    .container-fluid
+      .row-fluid
+        .span1
+        .span10
+          h1 TLV.js
+          block content
+        .span1

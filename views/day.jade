@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  #message-container
+    for line in log
+      if line.info
+        .message.message-info= line.info
+      if line.isNotice == true
+        .message.message-notice
+          | #{line.time} #{line.nick} : #{line.msg}
+      else
+        .message
+          | #{line.time} #{line.nick} : #{line.msg}

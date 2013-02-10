@@ -1,0 +1,65 @@
+html
+  overflow-y scroll
+
+.message {
+  padding: 3px 35px 3px 14px;
+  margin-bottom: 5px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: #f5f5f5;
+  border: 1px solid #dcdcdc;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.message,
+.message h4 {
+  color: #333;
+}
+
+.message h4 {
+  margin: 0;
+}
+
+.message .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 20px;
+}
+
+.message-notice {
+  background-color: #fcf8e3;
+  border-color: #fbeed5;
+}
+
+.message-notice h4 {
+  color: #c09853;
+}
+
+.message-info {
+  color: #3a87ad;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+
+.message-info h4 {
+  color: #3a87ad;
+}
+
+.message-block {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.message-block > p,
+.message-block > ul {
+  margin-bottom: 0;
+}
+
+.message-block p + p {
+  margin-top: 5px;
+}
+
+#pager
+  text-align center

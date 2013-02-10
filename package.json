@@ -1,0 +1,12 @@
+{
+  "name": "TLV.js",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "*",
+    "stylus": "*",
+    "jade": "*",
+    "connect-assets": "*",
+    "mongoose": "*",
+    "moment": "*"
+  }
+}
