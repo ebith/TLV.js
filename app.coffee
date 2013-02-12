@@ -70,7 +70,6 @@ parseLog = (docs) ->
       date: date ? null
       info: info ? null
       time: timestamp.format('HH:mm')
-      channel: line.channel
       nick: line.nick
       msg: line.log
     }
