@@ -1,0 +1,14 @@
+#message-container
+  for line in log
+    if line.info
+      .message.message-info
+        a(href="/#{line.info}/")= line.info
+    if line.date
+      .message.message-date
+        a(href="/#{line.date}/")= line.date
+    if line.isNotice == true
+      .message.message-notice
+        | #{line.time} #{line.nick} : #{line.msg}
+    else if line.msg
+      .message
+        | #{line.time} #{line.nick} : #{line.msg}

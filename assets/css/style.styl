@@ -1,10 +1,8 @@
-html
-  overflow-y scroll
-
 .message {
   padding: 3px 35px 3px 14px;
   margin-bottom: 5px;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #333;
   background-color: #f5f5f5;
   border: 1px solid #dcdcdc;
   -webkit-border-radius: 4px;
@@ -12,54 +10,35 @@ html
           border-radius: 4px;
 }
 
-.message,
-.message h4 {
-  color: #333;
-}
-
-.message h4 {
-  margin: 0;
-}
-
-.message .close {
-  position: relative;
-  top: -2px;
-  right: -21px;
-  line-height: 20px;
-}
-
 .message-notice {
   background-color: #fcf8e3;
   border-color: #fbeed5;
 }
 
-.message-notice h4 {
-  color: #c09853;
-}
-
-.message-info {
+.message-date {
   color: #3a87ad;
   background-color: #d9edf7;
   border-color: #bce8f1;
 }
 
-.message-info h4 {
+.message-date a {
   color: #3a87ad;
+  font-weight: bold;
 }
 
-.message-block {
-  padding-top: 14px;
-  padding-bottom: 14px;
+.message-info {
+  color: #468847;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
 }
 
-.message-block > p,
-.message-block > ul {
-  margin-bottom: 0;
+.message-info a {
+  color: #468847;
+  font-weight: bold;
 }
 
-.message-block p + p {
-  margin-top: 5px;
-}
+html
+  overflow-y scroll
 
 #pager
   text-align center

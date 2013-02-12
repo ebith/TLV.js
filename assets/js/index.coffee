@@ -2,7 +2,7 @@ jQuery ->
   page = 1
 
   $.ajax {
-    type: 'POST'
+    type: 'GET'
     url: '/recent.json'
     data: {
       page: page
@@ -17,7 +17,7 @@ jQuery ->
   $('#load-older').on 'click', (e) ->
     do e.preventDefault
     $.ajax {
-      type: 'POST'
+      type: 'GET'
       url: '/recent.json'
       data: {
         page: page+1
@@ -34,7 +34,7 @@ jQuery ->
     do e.preventDefault
     $('#message-container').find('div').remove()
     $.ajax {
-      type: 'POST'
+      type: 'GET'
       url: '/recent.json'
       data: {
         page: 1
@@ -53,12 +53,8 @@ jQuery ->
       $('#message-container').find('div').remove()
       word = $(this).val()
       $.ajax {
-        type: 'POST'
-        url: '/search.json'
-        data: {
-          word: word
-          limit: 0
-        }
+        type: 'GET'
+        url: "/search/#{word}.json"
         dataType: 'json'
         success: (data, textStatus, jqXHR) ->
           if data.length
@@ -74,9 +70,11 @@ jQuery ->
       tmp = ''
       if line.info
         tmp += "<div class=\"message message-info\"><a href=\"/#{line.info}/\">#{line.info}</a></div>"
+      if line.date
+        tmp += "<div class=\"message message-date\"><a href=\"/#{line.date}/\">#{line.date}</a></div>"
       if line.isNotice
         tmp += "<div class=\"message message-notice\">#{line.time} #{line.nick} : #{line.msg}</div>"
-      else
+      else if line.msg
         tmp += "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
       return tmp
     callback msg
