@@ -6,7 +6,6 @@ mongoose =  require 'mongoose'
 mongoose.connect 'mongodb://localhost/tiarra'
 
 Log = mongoose.model 'Log', mongoose.Schema({})
-Recent = mongoose.model 'Recent', mongoose.Schema({})
 
 
 app = express()
