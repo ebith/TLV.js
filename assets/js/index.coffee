@@ -19,7 +19,7 @@ jQuery ->
     stream = new EventSource '/stream.json'
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), (msg) ->
-        $('#message-container').append(msg).hide().fadeIn()
+        $(msg[0]).appendTo('#message-container').hide().fadeIn()
         $('html').animate({scrollTop: do $(document).height})
 
   $('#load-older').on 'click', (e) ->
