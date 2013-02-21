@@ -12,13 +12,12 @@ jQuery ->
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        make data, (msg) ->
-          $('#message-container').prepend(msg).hide().fadeIn()
+        make data, true
     }
 
     stream = new EventSource '/stream.json'
     stream.addEventListener 'message', (e) ->
-      make JSON.parse(e.data), (msg) ->
+      make JSON.parse(e.data), false, (msg) ->
         $(msg[0]).appendTo('#message-container').hide().fadeIn()
         $('html').animate({scrollTop: do $(document).height})
 
@@ -34,8 +33,7 @@ jQuery ->
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
-        make data, (msg) ->
-          $('#message-container').prepend(msg).hide().fadeIn()
+        make data, true
     }
     page++
 
@@ -56,24 +54,25 @@ jQuery ->
         url: "/search/#{word}.json"
         dataType: 'json'
         success: (data, textStatus, jqXHR) ->
-          if data.length
-            make data, (msg) ->
-              $('#message-container').prepend(msg).hide().fadeIn()
+          if data.length > 1
+            make data, true
           else
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
-            $('#message-container').prepend(msg).hide().fadeIn()
+            $(msg).prependTo('#message-container').hide().fadeIn()
       }
 
-  make = (data, callback) ->
-    msg = data.map (line) ->
-      tmp = ''
+  make = (data, prepend, callback) ->
+    msg = []
+    data.forEach (line) ->
       if line.info
-        tmp += "<div class=\"message message-info\"><a href=\"/#{line.info}/\">#{line.info}</a></div>"
+        msg.push "<div class=\"message message-info\"><a href=\"/#{line.info}/\">#{line.info}</a></div>"
       if line.date
-        tmp += "<div class=\"message message-date\"><a href=\"/#{line.date}/\">#{line.date}</a></div>"
+        msg.push "<div class=\"message message-date\"><a href=\"/#{line.date}/\">#{line.date}</a></div>"
       if line.isNotice
-        tmp += "<div class=\"message message-notice\">#{line.time} #{line.nick} : #{line.msg}</div>"
+        msg.push "<div class=\"message message-notice\">#{line.time} #{line.nick} : #{line.msg}</div>"
       else if line.msg
-        tmp += "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
-      return tmp
-    callback msg
+        msg.push "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
+    if prepend
+      $(div).prependTo('#message-container').hide().fadeIn() for div in msg.reverse()
+    else
+      callback msg.reverse()
