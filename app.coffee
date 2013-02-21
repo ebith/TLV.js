@@ -1,6 +1,7 @@
 express = require 'express'
 moment = require 'moment'
 mongoose = require 'mongoose'
+net = require 'net'
 
 mongoose.connect 'mongodb://localhost/tiarra'
 Log = mongoose.model 'Log', mongoose.Schema({})
@@ -69,6 +70,20 @@ app.get '/stream.json', (req, res) ->
       oldstamp = doc.timestamp
       msg = JSON.stringify(parseLog [doc], moment oldstamp)
       res.write 'data: '+ msg + '\n\n'
+
+app.post '/say/?', (req, res) ->
+  msg = """
+    NOTIFY System::SendMessage TIARRACONTROL/1.0\r\n
+    Sender: TLV.js\r\n
+    Notice: #{req.body.notice is 'yes' ? 'no'}\r\n
+    Channel: #{req.body.channel}\r\n
+    Charset: UTF-8\r\n
+    Text: #{req.body.text}\r\n
+    \r\n
+    """
+  socket = net.connect {path: '/tmp/tiarra-control/tiarra'}, ->
+    socket.write msg
+    res.send 200
 
 getLog = (year, month, day, skip=0, limit=50, callback) ->
   targetDay = new Date year, month-1, day
