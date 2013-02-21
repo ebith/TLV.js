@@ -69,16 +69,27 @@ sub _load_schema {
     my $database = $client->get_database('tiarra');
     my $log = $database->get_collection('logs');
     $log->ensure_index({timestamp => -1}, {background => boolean::true});
+    $database->run_command({create => 'recents', capped => boolean::true, size => 1048576});
+    my $recent = $database->get_collection('recents');
 
     $self->{log} = $log;
+    $self->{recent} = $recent;
 }
 
 sub store {
     my ($self, $param) = @_;
     my $log = $self->{log};
+    my $recent = $self->{recent};
 
     my $is_notice = $param->{is_notice} == 1 ? boolean::true : boolean::false;
     $log->insert({
+      is_notice => $is_notice,
+      log => $param->{log},
+      nick => $param->{nick},
+      channel => $param->{channel},
+      timestamp => DateTime->now
+    });
+    $recent->insert({
       is_notice => $is_notice,
       log => $param->{log},
       nick => $param->{nick},

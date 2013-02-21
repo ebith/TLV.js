@@ -1,20 +1,29 @@
 jQuery ->
   page = 1
+  stream = ''
 
-  $.ajax {
-    type: 'GET'
-    url: '/recent.json'
-    data: {
-      page: page
-      limit: 20
+  do loadRecent = ->
+    $.ajax {
+      type: 'GET'
+      url: '/recent.json'
+      data: {
+        page: 1
+        limit: 20
+      }
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        make data, (msg) ->
+          $('#message-container').prepend(msg).hide().fadeIn()
     }
-    dataType: 'json'
-    success: (data, textStatus, jqXHR) ->
-      make data, (msg) ->
-        $('#message-container').prepend(msg).hide().fadeIn()
-  }
+
+    stream = new EventSource '/stream.json'
+    stream.addEventListener 'message', (e) ->
+      make JSON.parse(e.data), (msg) ->
+        $('#message-container').append(msg).hide().fadeIn()
+        $('html').animate({scrollTop: do $(document).height})
 
   $('#load-older').on 'click', (e) ->
+    do stream.close
     do e.preventDefault
     $.ajax {
       type: 'GET'
@@ -33,22 +42,12 @@ jQuery ->
   $('#load-recent').on 'click', (e) ->
     do e.preventDefault
     $('#message-container').find('div').remove()
-    $.ajax {
-      type: 'GET'
-      url: '/recent.json'
-      data: {
-        page: 1
-        limit: 20
-      }
-      dataType: 'json'
-      success: (data, textStatus, jqXHR) ->
-        make data, (msg) ->
-          $('#message-container').prepend(msg).hide().fadeIn()
-    }
+    do loadRecent
     page = 1
 
   $('#search').keypress (e) ->
     if e.which is 13
+      do stream.close
       do e.preventDefault
       $('#message-container').find('div').remove()
       word = $(this).val()
