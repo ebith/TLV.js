@@ -74,7 +74,7 @@ jQuery ->
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
             $(msg).prependTo('#message-container').css('opacity', 0).transition({opacity: 1})
       }
-    $('html, body').scrollTop(0)
+      $('html, body').scrollTop(0)
 
   make = (data, prepend, callback) ->
     msg = []
