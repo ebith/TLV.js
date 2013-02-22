@@ -4,9 +4,10 @@ block script
   != js('index.js')
 
 block content
-  #navigation
-    form#pager.form-inline
-      button#load-older.btn.pull-left(type='button') 古いの
-      input#search(type='text', placeholder='検索する？')
-      button#load-recent.btn.pull-right(type='button') 最新の
-  #message-container
+  #wrapper
+    #navigation
+      form#pager.form-inline
+        button#load-older.btn.pull-left(type='button') 古いの
+        input#search(type='text', placeholder='検索する？')
+        button#load-recent.btn.pull-right(type='button') 最新の
+    #message-container

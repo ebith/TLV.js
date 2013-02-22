@@ -2,6 +2,12 @@ jQuery ->
   page = 1
   stream = ''
 
+  $(window).scroll ->
+    if $(this).scrollTop() > ($(document).height() - $(window).height()) / 2
+      $('#navigation').appendTo('#wrapper')
+    else
+      $('#navigation').prependTo('#wrapper')
+
   do loadRecent = ->
     $.ajax {
       type: 'GET'
@@ -36,12 +42,14 @@ jQuery ->
         make data, true
     }
     page++
+    $('html, body').scrollTop(0)
 
   $('#load-recent').on 'click', (e) ->
     do e.preventDefault
     $('#message-container').find('div').remove()
     do loadRecent
     page = 1
+    $('html, body').scrollTop(0)
 
   $('#search').keypress (e) ->
     if e.which is 13
@@ -60,6 +68,7 @@ jQuery ->
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
             $(msg).prependTo('#message-container').hide().fadeIn()
       }
+    $('html, body').scrollTop(0)
 
   make = (data, prepend, callback) ->
     msg = []
