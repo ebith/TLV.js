@@ -25,8 +25,8 @@ if process.env.NODE_ENV is 'production'
   https = require 'https'
   fs = require 'fs'
   options = {
-    key: fs.readFileSync process.env.KEY_PATH
-    cert: fs.readFileSync process.env.CRT_PATH
+    key: fs.readFileSync process.env.SSL_KEY_PATH
+    cert: fs.readFileSync process.env.SSL_CRT_PATH
   }
   httpServer = https.createServer(options, app).listen app.get('port')
 else
