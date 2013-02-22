@@ -117,5 +117,8 @@ parseLog = (docs, oldstamp=moment 0) ->
 addTag = (text) ->
   if (urls = /((?:https?|ftp):\/\/\S+)/.exec text)
     for url in urls[1..(urls.length)]
-      return text.replace url, "<a href=\"#{url}\" target=\"_blank\">#{url}</a>"
+      if /\.(jpg|png|gif)$/.test url
+        return text.replace url, "<a href=\"#{url}\" target=\"_blank\"><img class=\"lazy\" src=\"/img/grey.gif\" data-original=\"#{url}\"></a>"
+      else
+        return text.replace url, "<a href=\"#{url}\" target=\"_blank\">#{url}</a>"
   return text

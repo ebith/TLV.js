@@ -11,8 +11,25 @@ html
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.0.0/css/font-awesome.min.css')
     != css('style.css')
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.8.4/jquery.lazyload.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery.transit/0.9.9/jquery.transit.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js')
     block script
+    :coffeescript
+      jQuery ->
+        $('img.lazy').show().lazyload {
+          appear: ->
+            $(this).css('opacity', 0)
+          load: ->
+            $(this).addClass('thumbnail')
+            $(this).transition({'opacity': 1}, 'slow')
+            if $(this).width() >= $(this).height()
+              $(this).width('150px')
+              $(this).css('top', "#{$(this).height()}px")
+            else
+              $(this).height('150px')
+              $(this).css('left', "#{$(this).width()}px")
+        }
 
   body
     .container-fluid
