@@ -4,9 +4,9 @@ jQuery ->
 
   $(window).scroll ->
     if $(this).scrollTop() > ($(document).height() - $(window).height()) / 2
-      $('#navigation').appendTo('#wrapper')
+      $('#navigation').appendTo('#wrapper').css('opacity', 0).transition({opacity: 1})
     else
-      $('#navigation').prependTo('#wrapper')
+      $('#navigation').prependTo('#wrapper').css('opacity', 0).transition({opacity: 1})
 
   do loadRecent = ->
     $.ajax {
@@ -24,7 +24,7 @@ jQuery ->
     stream = new EventSource '/stream.json'
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), false, (msg) ->
-        $(msg[0]).appendTo('#message-container').hide().fadeIn()
+        $(msg[0]).appendTo('#message-container').css('opacity', 0).transition({opacity: 1}, 'slow')
         $('html, body').scrollTop(do $(document).height)
 
   $('#load-older').on 'click', (e) ->
@@ -66,7 +66,7 @@ jQuery ->
             make data, true
           else
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
-            $(msg).prependTo('#message-container').hide().fadeIn()
+            $(msg).prependTo('#message-container').css('opacity', 0).transition({opacity: 1})
       }
     $('html, body').scrollTop(0)
 
@@ -82,6 +82,6 @@ jQuery ->
       else if line.msg
         msg.push "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
     if prepend
-      $(div).prependTo('#message-container').hide().fadeIn() for div in msg.reverse()
+      $(div).prependTo('#message-container').css('opacity', 0).transition({opacity: 1}) for div in msg.reverse()
     else
       callback msg.reverse()
