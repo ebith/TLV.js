@@ -16,4 +16,6 @@ Tiarraのmodule/Log/に配置してconfに以下のように書いて使う。
   channel: *
 }
 ```
-色々とよくわかっていないのですごく適当。
+
+## SendMessage.pm
+[tiarraMetro付属のSendMessage.pm](https://github.com/tyoro/tiarraMetro/blob/master/misc/SendMessage.pm)にLog::Mongo用の改変も加えたやつ。
