@@ -7,8 +7,6 @@
       .message.message-date
         a(href="/#{line.date}/")= line.date
     if line.isNotice == true
-      .message.message-notice
-        | #{line.time} #{line.nick} : #{line.msg}
+      .message.message-notice #{line.time} #{line.nick} : !{line.msg}
     else if line.msg
-      .message
-        | #{line.time} #{line.nick} : #{line.msg}
+      .message #{line.time} #{line.nick} : !{line.msg}

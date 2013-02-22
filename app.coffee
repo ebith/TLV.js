@@ -111,5 +111,11 @@ parseLog = (docs, oldstamp=moment 0) ->
       info: info ? null
       time: timestamp.format('HH:mm')
       nick: line.nick
-      msg: line.log
+      msg: addTag line.log
     }
+
+addTag = (text) ->
+  if (urls = /((?:https?|ftp):\/\/\S+)/.exec text)
+    for url in urls[1..(urls.length)]
+      return text.replace url, "<a href=\"#{url}\" target=\"_blank\">#{url}</a>"
+  return text
