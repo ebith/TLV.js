@@ -25,7 +25,7 @@ jQuery ->
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), false, (msg) ->
         $(msg[0]).appendTo('#message-container').hide().fadeIn()
-        $('html, body').animate({scrollTop: do $(document).height})
+        $('html, body').scrollTop(do $(document).height)
 
   $('#load-older').on 'click', (e) ->
     do stream.close
