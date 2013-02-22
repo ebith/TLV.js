@@ -2,11 +2,16 @@ jQuery ->
   page = 1
   stream = ''
 
+  navPosTop = true
   $(window).scroll ->
     if $(this).scrollTop() > ($(document).height() - $(window).height()) / 2
-      $('#navigation').appendTo('#wrapper').css('opacity', 0).transition({opacity: 1})
+      if navPosTop
+        $('#navigation').appendTo('#wrapper').css('opacity', 0).transition({opacity: 1})
+        navPosTop = false
     else
-      $('#navigation').prependTo('#wrapper').css('opacity', 0).transition({opacity: 1})
+      unless navPosTop
+        $('#navigation').prependTo('#wrapper').css('opacity', 0).transition({opacity: 1})
+        navPosTop = true
 
   do loadRecent = ->
     $.ajax {
