@@ -87,6 +87,13 @@ sub control_requested {
 		Auto::Utils::sendto_channel_closure(
 			$receiver, $command, undef, undef, undef, 0
 				)->($text);
+	    $this->_runloop->mod_manager->get('Log::Recent')->message_arrived(
+		   Tiarra::IRC::Message->new(
+			 Command => $command,
+			 Params  => [ $receiver, $text ]
+		   ),
+		   $this->_runloop->{sockets}->[1]
+	    );
 	    $this->_runloop->mod_manager->get('Log::Mongo')->message_arrived(
 		   Tiarra::IRC::Message->new(
 			 Command => $command,

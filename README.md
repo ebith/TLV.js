@@ -18,4 +18,4 @@ Tiarraのmodule/Log/に配置してconfに以下のように書いて使う。
 ```
 
 ## SendMessage.pm
-[tiarraMetro付属のSendMessage.pm](https://github.com/tyoro/tiarraMetro/blob/master/misc/SendMessage.pm)にLog::Mongo用の改変も加えたやつ。
+[tiarraMetro付属のSendMessage.pm](https://github.com/tyoro/tiarraMetro/blob/master/misc/SendMessage.pm)にLog::MongoとLog::Recent用の部分もコピペしたやつ。
