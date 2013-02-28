@@ -30,7 +30,6 @@ jQuery ->
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), false, (msg) ->
         $(msg[0]).appendTo('#message-container').css('opacity', 0).transition({opacity: 1}, 'slow')
-        makeThumbnail 'img.thumbnail:last'
         $('html, body').scrollTop(do $(document).height)
 
   $('#load-older').on 'click', (e) ->
@@ -89,6 +88,5 @@ jQuery ->
         msg.push "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
     if prepend
       $(div).prependTo('#message-container').css('opacity', 0).transition({opacity: 1}) for div in msg.reverse()
-      do makeThumbnail
     else
       callback msg.reverse()
