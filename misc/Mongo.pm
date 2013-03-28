@@ -81,6 +81,8 @@ sub store {
     my $log = $self->{log};
     my $recent = $self->{recent};
 
+    return unless ($param->{nick} && $param->{log} && $param->{channel});
+
     my $is_notice = $param->{is_notice} == 1 ? boolean::true : boolean::false;
     $log->insert({
       is_notice => $is_notice,
