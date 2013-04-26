@@ -50,7 +50,7 @@ app.get '/search/:word/?.:format?', (req, res) ->
         res.render 'search', {title: req.params.word, log: log}
 
 app.get '/recent.json', (req, res) ->
-  getRecent req.query.page, req.query.limit, (log) ->
+  getRecent req.query.skip, req.query.limit, (log) ->
     res.json log
 
 app.get '/stream.json', (req, res) ->
@@ -95,8 +95,7 @@ searchLog = (word, skip=0, limit=0, callback) ->
   Log.find({log: new RegExp(word, 'i')}).lean().sort({timestamp: -1}).skip(skip).limit(limit).exec (err, docs) ->
     callback parseLog docs
 
-getRecent = (page=1, limit=50, callback) ->
-  skip = (page - 1) * 50
+getRecent = (skip=0, limit=50, callback) ->
   Recent.find().lean().sort({$natural: -1}).skip(skip).limit(limit).exec (err, docs) ->
     callback parseLog docs
 

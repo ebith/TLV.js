@@ -1,5 +1,5 @@
 jQuery ->
-  page = 1
+  skip = 0
   stream = ''
 
   navPosTop = true
@@ -18,13 +18,13 @@ jQuery ->
       type: 'GET'
       url: '/recent.json'
       data: {
-        page: 1
         limit: 20
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         make data, true
     }
+    skip += 20
 
     stream = new EventSource '/stream.json'
     stream.addEventListener 'message', (e) ->
@@ -39,21 +39,21 @@ jQuery ->
       type: 'GET'
       url: '/recent.json'
       data: {
-        page: page+1
+        skip: skip
         limit: 50
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         make data, true
     }
-    page++
+    skip += 50
     $('html, body').scrollTop(0)
 
   $('#load-recent').on 'click', (e) ->
     do e.preventDefault
     $('#message-container').find('div').remove()
     do loadRecent
-    page = 1
+    skip = 0
     $('html, body').scrollTop(0)
 
   $('#search').keypress (e) ->
