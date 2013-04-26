@@ -1,6 +1,7 @@
 {
   "name": "TLV.js",
   "version": "0.0.1",
+  "author": "ebith <ebith.h@gmail.com>",
   "dependencies": {
     "express": "*",
     "stylus": "*",
