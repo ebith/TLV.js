@@ -9,7 +9,7 @@ Recent = mongoose.model 'Recent', mongoose.Schema({})
 
 app = express()
 app.configure ->
-  app.use express.basicAuth(process.env.TLV_USER, process.env.TLV_PASS) if process.env.NODE_ENV is'production'
+  app.use express.basicAuth(process.env.TLV_USER, process.env.TLV_PASS) if process.env.TLV_BASIC_AUTH is 'true'
   app.set 'port', process.env.PORT || 3000
   app.set 'views', __dirname + '/views'
   app.set 'view engine', 'jade'
@@ -21,12 +21,12 @@ app.configure ->
   app.use require('connect-assets')()
   app.use express.static(__dirname + '/public')
 
-if process.env.NODE_ENV is 'production'
+if process.env.TLV_USE_SSL is 'true'
   https = require 'https'
   fs = require 'fs'
   options = {
-    key: fs.readFileSync process.env.SSL_KEY_PATH
-    cert: fs.readFileSync process.env.SSL_CRT_PATH
+    key: fs.readFileSync process.env.TLV_SSL_KEY
+    cert: fs.readFileSync process.env.TLV_SSL_CRT
   }
   httpServer = https.createServer(options, app).listen app.get('port')
 else
