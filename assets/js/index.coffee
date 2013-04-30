@@ -22,9 +22,10 @@ jQuery ->
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        skip = 20
+        $('html, body').scrollTop(0)
         make data, true
     }
-    skip += 20
 
     stream = new EventSource '/stream.json'
     stream.addEventListener 'message', (e) ->
@@ -44,17 +45,15 @@ jQuery ->
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        skip += 50
+        $('html, body').scrollTop(0)
         make data, true
     }
-    skip += 50
-    $('html, body').scrollTop(0)
 
   $('#load-recent').on 'click', (e) ->
     do e.preventDefault
     $('#message-container').find('div').remove()
     do loadRecent
-    skip = 0
-    $('html, body').scrollTop(0)
 
   $('#search').keypress (e) ->
     if e.which is 13
@@ -67,13 +66,13 @@ jQuery ->
         url: "/search/#{word}.json"
         dataType: 'json'
         success: (data, textStatus, jqXHR) ->
+          $('html, body').scrollTop(0)
           if data.length > 1
             make data, true
           else
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
             $(msg).prependTo('#message-container').css('opacity', 0).transition({opacity: 1})
       }
-      $('html, body').scrollTop(0)
 
   make = (data, prepend, callback) ->
     msg = []
