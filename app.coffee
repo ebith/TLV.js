@@ -1,3 +1,4 @@
+config = require './config'
 express = require 'express'
 moment = require 'moment'
 mongoose = require 'mongoose'
@@ -9,8 +10,8 @@ Recent = mongoose.model 'Recent', mongoose.Schema({})
 
 app = express()
 app.configure ->
-  app.use express.basicAuth(process.env.TLV_USER, process.env.TLV_PASS) if process.env.TLV_BASIC_AUTH is 'true'
-  app.set 'port', process.env.PORT || 3000
+  app.use express.basicAuth(config.username, config.password) if config.basic_auth
+  app.set 'port', config.port || 3000
   app.set 'views', __dirname + '/views'
   app.set 'view engine', 'jade'
   app.use express.favicon()
@@ -21,12 +22,12 @@ app.configure ->
   app.use require('connect-assets')()
   app.use express.static(__dirname + '/public')
 
-if process.env.TLV_USE_SSL is 'true'
+if config.ssl
   https = require 'https'
   fs = require 'fs'
   options = {
-    key: fs.readFileSync process.env.TLV_SSL_KEY
-    cert: fs.readFileSync process.env.TLV_SSL_CRT
+    key: fs.readFileSync config.ssl_key
+    cert: fs.readFileSync config.ssl_crt
   }
   httpServer = https.createServer(options, app).listen app.get('port')
 else

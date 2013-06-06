@@ -1,0 +1,9 @@
+module.exports = {
+  port: 3443
+  basic_auth: true
+  username: 'user'
+  password: 'pass'
+  ssl: true
+  ssl_key: 'hogehoge.key'
+  ssl_crt: 'fugafuga.crt'
+}
