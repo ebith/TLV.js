@@ -6,4 +6,5 @@ module.exports = {
   ssl: true
   ssl_key: 'hogehoge.key'
   ssl_crt: 'fugafuga.crt'
+  default_channel: '#hogehoge'
 }

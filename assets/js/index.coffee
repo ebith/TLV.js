@@ -1,6 +1,10 @@
 jQuery ->
   skip = 0
   stream = ''
+  name = ''
+
+  $.get '/info', (data) ->
+    name = data.hostname
 
   navPosTop = true
   $(window).scroll ->
@@ -28,6 +32,7 @@ jQuery ->
     }
 
     stream = new EventSource '/stream.json'
+    setTimeout (-> ($.post '/say', { notice: 'yes', text: "#{name}がTLV.js見てる" })), 10000
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), false, (msg) ->
         $(msg[0]).appendTo('#message-container').css('opacity', 0).transition({opacity: 1}, 'slow')
@@ -45,6 +50,7 @@ jQuery ->
       }
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
+        $.post '/say', { notice: 'yes', text: "#{name}が過去ログ読んでる" } if skip is 70
         skip += 50
         $('html, body').scrollTop(0)
         make data, true
@@ -66,6 +72,7 @@ jQuery ->
         url: "/search/#{word}.json"
         dataType: 'json'
         success: (data, textStatus, jqXHR) ->
+          $.post '/say', { notice: 'yes', text: "#{name}が#{word}検索してる" }
           $('html, body').scrollTop(0)
           if data.length > 1
             make data, true

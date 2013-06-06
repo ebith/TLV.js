@@ -3,6 +3,7 @@ express = require 'express'
 moment = require 'moment'
 mongoose = require 'mongoose'
 net = require 'net'
+dns = require 'dns'
 
 mongoose.connect 'mongodb://localhost/tiarra'
 Log = mongoose.model 'Log', mongoose.Schema({})
@@ -10,6 +11,7 @@ Recent = mongoose.model 'Recent', mongoose.Schema({})
 
 app = express()
 app.configure ->
+  app.enable 'trust proxy'
   app.use express.basicAuth(config.username, config.password) if config.basic_auth
   app.set 'port', config.port || 3000
   app.set 'views', __dirname + '/views'
@@ -77,7 +79,7 @@ app.post '/say/?', (req, res) ->
     NOTIFY System::SendMessage TIARRACONTROL/1.0\r\n
     Sender: TLV.js\r\n
     Notice: #{req.body.notice is 'yes' ? 'no'}\r\n
-    Channel: #{req.body.channel}\r\n
+    Channel: #{req.body.channel ? config.default_channel}\r\n
     Charset: UTF-8\r\n
     Text: #{req.body.text}\r\n
     \r\n
@@ -85,6 +87,16 @@ app.post '/say/?', (req, res) ->
   socket = net.connect {path: '/tmp/tiarra-control/tiarra'}, ->
     socket.write msg
     res.send 200
+
+app.get '/info/?', (req, res) ->
+  info = {}
+  ip = req.ip
+  dns.reverse ip, (err, hostnames) ->
+    info = {
+      ip: ip
+      hostname: if hostnames then hostnames[0] else ip
+    }
+    res.json info
 
 getLog = (year, month, day, skip=0, limit=50, callback) ->
   targetDay = new Date year, month-1, day
