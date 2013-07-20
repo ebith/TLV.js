@@ -32,7 +32,9 @@ jQuery ->
     }
 
     stream = new EventSource '/stream.json'
-    setTimeout (-> ($.post '/say', { notice: 'yes', text: "#{name}がTLV.js見てる" })), 10000
+    setTimeout (->
+      ($.post '/say', { notice: 'yes', text: "#{name}がTLV.js見てる" }) if stream.readyState is 1
+    ), 10000
     stream.addEventListener 'message', (e) ->
       make JSON.parse(e.data), false, (msg) ->
         $(msg[0]).appendTo('#message-container').css('opacity', 0).transition({opacity: 1}, 'slow')
