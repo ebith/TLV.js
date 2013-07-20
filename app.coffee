@@ -73,6 +73,7 @@ app.get '/stream.json', (req, res) ->
       oldstamp = doc.timestamp
       msg = JSON.stringify(parseLog [doc], moment oldstamp)
       res.write 'data: '+ msg + '\n\n'
+  setInterval (-> res.write ': keep-alive\n\n'), 15 * 1000
 
 app.post '/say/?', (req, res) ->
   msg = """
