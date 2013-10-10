@@ -10,7 +10,7 @@ Log = mongoose.model 'Log', mongoose.Schema({})
 Recent = mongoose.model 'Recent', mongoose.Schema({})
 
 app = express()
-app.configure ->
+app.configure -> #{{{
   app.enable 'trust proxy'
   app.use express.basicAuth(config.username, config.password) if config.basic_auth
   app.set 'port', config.port || 3000
@@ -35,6 +35,7 @@ if config.ssl
 else
   http = require 'http'
   httpServer = http.createServer(app).listen app.get('port')
+# }}}
 
 app.get '/', (req, res) ->
   res.render 'index', {title: false}
