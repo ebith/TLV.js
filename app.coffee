@@ -2,12 +2,15 @@ config = require './config'
 express = require 'express'
 moment = require 'moment'
 mongoose = require 'mongoose'
+elasticsearch = require 'elasticsearch'
 net = require 'net'
 dns = require 'dns'
 
 mongoose.connect 'mongodb://localhost/tiarra'
 Log = mongoose.model 'Log', mongoose.Schema({})
 Recent = mongoose.model 'Recent', mongoose.Schema({})
+
+es = elasticsearch {_index: '_all', _type: 'tiarra'}
 
 app = express()
 app.configure -> #{{{
@@ -107,12 +110,33 @@ getLog = (year, month, day, skip=0, limit=50, callback) ->
     callback parseLog docs
 
 searchLog = (word, skip=0, limit=0, callback) ->
-  Log.find({log: new RegExp(word, 'i')}).lean().sort({timestamp: -1}).skip(skip).limit(limit).exec (err, docs) ->
-    callback parseLog docs
+  es.search {
+    sort:
+      at: 'asc'
+    from: 0
+    size: 1000
+    query:
+      term:
+        text: word
+    }, (err, data) ->
+      callback parseES data.hits.hits
 
 getRecent = (skip=0, limit=50, callback) ->
   Recent.find().lean().sort({$natural: -1}).skip(skip).limit(limit).exec (err, docs) ->
     callback parseLog docs
+
+parseES = (hits, oldstamp=moment 0) ->
+  log = hits.map (hit) ->
+    timestamp = moment hit._source.at
+    date = timestamp.format('YYYY/MM/DD') if timestamp.clone().millisecond(0).second(0).minute(0).hour(0).diff(oldstamp.millisecond(0).second(0).minute(0).hour(0), 'days') > 0
+    oldstamp = timestamp
+    return {
+      isNotice: false
+      data: data ? null
+      time: timestamp.format('HH:mm')
+      nick: hit._source.user
+      msg: addTag hit._source.text
+    }
 
 parseLog = (docs, oldstamp=moment 0) ->
   log = docs.reverse().map (line) ->
