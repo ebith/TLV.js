@@ -128,7 +128,7 @@ getRecent = (skip=0, limit=50, callback) ->
 parseES = (hits, oldstamp=moment 0) ->
   log = hits.map (hit) ->
     timestamp = moment hit._source.at
-    date = timestamp.format('YYYY/MM/DD') if timestamp.clone().millisecond(0).second(0).minute(0).hour(0).diff(oldstamp.millisecond(0).second(0).minute(0).hour(0), 'days') > 0
+    date = timestamp.format('YYYY/MM/DD') unless timestamp.format('DD') is oldstamp.format('DD')
     oldstamp = timestamp
     return {
       isNotice: false
@@ -141,7 +141,7 @@ parseES = (hits, oldstamp=moment 0) ->
 parseLog = (docs, oldstamp=moment 0) ->
   log = docs.reverse().map (line) ->
     timestamp = moment line.timestamp
-    date = timestamp.format('YYYY/MM/DD') if timestamp.clone().millisecond(0).second(0).minute(0).hour(0).diff(oldstamp.millisecond(0).second(0).minute(0).hour(0), 'days') > 0
+    date = timestamp.format('YYYY/MM/DD') unless timestamp.format('DD') is oldstamp.format('DD')
     oldstamp = timestamp
     return {
       isNotice: line.is_notice
