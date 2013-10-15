@@ -132,7 +132,7 @@ parseES = (hits, oldstamp=moment 0) ->
     oldstamp = timestamp
     return {
       isNotice: false
-      data: data ? null
+      date: date ? null
       time: timestamp.format('HH:mm')
       nick: hit._source.user
       msg: addTag hit._source.text
