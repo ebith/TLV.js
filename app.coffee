@@ -50,9 +50,9 @@ app.get '/:year/:month/:day/?', (req, res) ->
 
 app.get '/search/:word/?.:format?', (req, res) ->
   searchLog req.params.word, req.query.skip, req.query.limit, (log) ->
-    log.unshift {info: "search/#{req.params.word}"}
+    log.unshift {info: "search/#{req.params.word}"} if log.length > 0
     if req.params.format is 'json'
-        res.json log
+        res.json {searchWord: req.params.word, log: log}
     else
         res.render 'search', {title: req.params.word, log: log}
 
@@ -135,7 +135,7 @@ parseES = (hits, oldstamp=moment 0) ->
       date: date ? null
       time: timestamp.format('HH:mm')
       nick: hit._source.user
-      msg: addTag hit._source.text
+      msg: hit._source.text
     }
 
 parseLog = (docs, oldstamp=moment 0) ->
@@ -149,11 +149,5 @@ parseLog = (docs, oldstamp=moment 0) ->
       info: info ? null
       time: timestamp.format('HH:mm')
       nick: line.nick
-      msg: addTag line.log
+      msg: line.log
     }
-
-addTag = (text) ->
-  if (urls = /((?:https?|ftp):\/\/\S+)/.exec text)
-    for url in urls[1..(urls.length)]
-      return text.replace url, "<a href=\"#{url}\" target=\"_blank\">#{url}</a>"
-  return text

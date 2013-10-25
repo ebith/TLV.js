@@ -36,8 +36,10 @@ jQuery ->
       ($.post '/say', { notice: 'yes', text: "#{name}がTLV.js見てる" }) if stream.readyState is 1
     ), 10000
     stream.addEventListener 'message', (e) ->
-      make JSON.parse(e.data), false, (msg) ->
-        $(msg[0]).appendTo('#message-container').css('opacity', 0).transition({opacity: 1}, 'slow')
+      make JSON.parse(e.data), false, null, (msg) ->
+        newMsg = $(msg[0]).appendTo('#message-container').css('opacity', 0)
+        addTag newMsg
+        newMsg.transition({opacity: 1}, 'slow')
         $('html, body').scrollTop(do $(document).height)
 
   $('#load-older').on 'click', (e) ->
@@ -76,14 +78,14 @@ jQuery ->
         success: (data, textStatus, jqXHR) ->
           $.post '/say', { notice: 'yes', text: "#{name}が#{word}検索してる" }
           $('html, body').scrollTop(0)
-          if data.length > 1
-            make data, true
+          if data.log.length > 0
+            make data.log, true, word
           else
             msg = "<div class=\"message message-info\" style=\"text-align: center\">誰も <strong>#{word}</strong> とか言ってないし</div>"
             $(msg).prependTo('#message-container').css('opacity', 0).transition({opacity: 1})
       }
 
-  make = (data, prepend, callback) ->
+  make = (data, prepend, highlight, callback) ->
     msg = []
     data.forEach (line) ->
       if line.info
@@ -93,8 +95,30 @@ jQuery ->
       if line.isNotice
         msg.push "<div class=\"message message-notice\">#{line.time} #{line.nick} : #{line.msg}</div>"
       else if line.msg
-        msg.push "<div class=\"message\">#{line.time} #{line.nick} : #{line.msg}</div>"
+        msg.push "<div class=\"message message-text\">#{line.time} #{line.nick} : #{line.msg}</div>"
     if prepend
       $(div).prependTo('#message-container').css('opacity', 0).transition({opacity: 1}) for div in msg.reverse()
+      addTag null, highlight
     else
       callback msg.reverse()
+
+  addTag = (target, highlight) ->
+    if target
+      text = $(target).text()
+      if (urls = text.match /((?:https?|ftp):\/\/\S+)/g)
+        for url, i in urls[0..(urls.length)]
+          $(target).html text = text.replace url, "<a href=\"#{url}\" target=\"_blank\">#{url}</a>"
+    else
+      $('.message-text').each ->
+        text = $(this).text()
+        if highlight
+          rehl = new RegExp highlight, 'ig'
+        if (urls = text.match /((?:https?|ftp):\/\/\S+)/g)
+          for url, i in urls[0..(urls.length)]
+            $(this).html text = text.replace url, "<a target=\"_blank\">#{url}</a>"
+            $(this).html text = text.replace rehl, '<span class="label label-warning">$&</span>'
+          anchors = $(this).find('a')
+          for a, i in anchors
+            $(a).attr 'href', urls[i]
+        else
+        $(this).html text.replace rehl, '<span class="label label-warning">$&</span>'
