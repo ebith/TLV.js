@@ -1,5 +1,9 @@
 # TLV.js
-Tiarraのログをブラウザで見返したり、検索したりできるやつ。
+Tiarraのログをブラウザで見れるやつ。検索はできなくなった。
+
+- Server-Sent EventsとVue.jsでリロード要らず
+- Web Speech APIで最新の発言を読み上げる
+- コストの割に使わないのでElasticsearchを使った全文検索はやめた
 
 ## 付属品
 ### importer.rb

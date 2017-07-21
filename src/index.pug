@@ -1,0 +1,43 @@
+doctype html
+html(lang='ja')
+  head
+    title TLV.js
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width,initial-scale=1')
+  body
+    .container#app
+      nav.level.is-mobile
+        p.level-item.has-text-centered
+          a.button.is-outlined.is-primary(v-on:click='getLog') 古いの
+        h1.level-item.has-text-centered.is-size-3 TLV.js
+        p.level-item.has-text-centered
+          a.button.is-outlined.is-primary(v-on:click='isOptionsModalActive = true') 設定
+
+
+      .container(v-cloak)
+        table.table.is-narrow
+          tbody(is='transition-group', name='line')
+            template(v-for='line, index in log')
+                tr.line(v-bind:key='line._id')
+                  td.time {{ line.time }}
+                  td.name {{ line.nick }}
+                  td.log(v-bind:class='{ "notice": line.is_notice }') {{ line.log }}
+
+      .container(v-cloak)
+        b-modal(v-bind:active.sync='isOptionsModalActive')
+          .modal-card
+            .modal-card-head
+              p.modal-card-title 設定
+              button.delete(v-on:click='isOptionsModalActive = false')
+            .modal-card-body
+              .field
+                label.label 音量
+                .field
+                  .control
+                    input(type='range', v-model='volume', step='0.1', min='0', max='1')
+                    span.volume(v-text='volume')
+                .field
+                  .control
+                    label.checkbox
+                      input.whyDisplayNone.mr5(type='checkbox', v-on:click='toggleMute')
+                      span ミュート

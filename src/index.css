@@ -1,0 +1,22 @@
+[v-cloak] { display: none; }
+
+.line-enter-active, .line-leave-active {
+  transition: all 1s;
+}
+.line-enter, .line-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+button.modal-close { display: none; }
+
+.volume {
+  vertical-align: top;
+  margin-left: 5px;
+}
+
+.whyDisplayNone { display: inline !important; }
+
+.mr5 { margin-right: 5px; }
+
+.notice { color: hsl(0, 0%, 48%); }
