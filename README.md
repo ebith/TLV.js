@@ -5,6 +5,9 @@ Tiarraのログをブラウザで見れるやつ。検索はできなくなっ�
 - Web Speech APIで最新の発言を読み上げる
 - コストの割に使わないのでElasticsearchを使った全文検索はやめた
 
+## Todo
+- 日付情報の挿入
+
 ## 付属品
 ### importer.rb
 既存のログをMongDBに流しこむためのスクリプト。

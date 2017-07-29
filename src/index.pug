@@ -17,11 +17,10 @@ html(lang='ja')
       .container(v-cloak)
         table.table.is-narrow
           tbody(is='transition-group', name='line')
-            template(v-for='line, index in log')
-                tr.line(v-bind:key='line._id')
-                  td.time {{ line.time }}
-                  td.name {{ line.nick }}
-                  td.log(v-bind:class='{ "notice": line.is_notice }') {{ line.log }}
+            tr.line(v-for='line in log', v-bind:key='line._id')
+              td.time {{ line.time }}
+              td.name {{ line.nick }}
+              td.log(v-bind:class='{ "notice": line.is_notice }') {{ line.log }}
 
       .container(v-cloak)
         b-modal(v-bind:active.sync='isOptionsModalActive')
