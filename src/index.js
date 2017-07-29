@@ -14,20 +14,6 @@ const voices = synth.getVoices().filter((voice) => {
 });
 
 window.addEventListener('load', () => {
-  const source = new EventSource('/stream');
-  source.addEventListener('message', (msg) => {
-    msg = JSON.parse(msg.data);
-
-    if (!msg.is_notice) {
-      const utter = new SpeechSynthesisUtterance(msg.log.replace(/(https?:\/\/\S+)/, 'URL省略'));
-      utter.voice = voices[0];
-      utter.volume = app.volume;
-      synth.speak(utter);
-    }
-
-    app.log.push(msg);
-  });
-
   const app = new Vue({
     el: '#app',
     data: {
@@ -59,12 +45,24 @@ window.addEventListener('load', () => {
     created: function () {
       this.$http.get('/recent.json').then((response) => {
         response.json().then((json) => {
-          for (const msg of json) {
-            this.log.push(msg);
-          }
+          this.log = json;
           this.skip = json.length;
         });
       });
     },
+  });
+
+  const source = new EventSource('/stream');
+  source.addEventListener('message', (msg) => {
+    msg = JSON.parse(msg.data);
+
+    if (!msg.is_notice) {
+      const utter = new SpeechSynthesisUtterance(msg.log.replace(/(https?:\/\/\S+)/, 'URL省略'));
+      utter.voice = voices[0];
+      utter.volume = app.volume;
+      synth.speak(utter);
+    }
+
+    app.log.push(msg);
   });
 });
