@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
     msg = JSON.parse(msg.data);
 
     if (!msg.is_notice) {
-      const utter = new SpeechSynthesisUtterance(msg.log);
+      const utter = new SpeechSynthesisUtterance(msg.log.replace(/(https?:\/\/\S+)/, 'URL省略'));
       utter.voice = voices[0];
       utter.volume = app.volume;
       synth.speak(utter);
