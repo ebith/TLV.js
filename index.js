@@ -3,6 +3,9 @@ const mongoClient = require('mongodb').MongoClient;
 const express = require('express');
 const moment = require('moment');
 const path = require('path');
+const bodyParser = require('body-parser');
+const net = require('net');
+const dns = require('dns');
 
 mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
   const recents = db.collection('recents');
@@ -11,6 +14,8 @@ mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
   const app = express();
   app.set('trust proxy', 'loopback');
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
 
   const formatDocs = (docs) => {
     return docs.map((doc) => {
@@ -24,6 +29,15 @@ mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
   app.get('/stream', function(req, res) {
     req.on('close', () => { stream.destroy(); });
     setInterval((() => res.write(': keep-alive\n\n')), 50 * 1000);
+    dns.reverse(req.ip, ((err, hostnames) => {
+      const info = {
+        info: {
+          hostname: hostnames ? hostnames[0] : req.ip
+        }
+      }
+      res.write(`data: ${JSON.stringify(info)}\n\n`);
+    }));
+
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
@@ -63,6 +77,20 @@ mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
     logs.find(query).sort({timestamp: -1}).toArray((err, docs) => {
       res.json(formatDocs(docs.reverse()));
     });
+  });
+
+  app.post('/say', (req,res) => {
+    const msg =`NOTIFY System::SendMessage TIARRACONTROL/1.0
+Sender: TLV.js
+Notice: ${req.body.notice ? 'yes' : 'no'}
+Channel: ${req.body.channel ? req.body.channel : argv.channel}
+Charset: UTF-8
+Text: ${req.body.text}
+`
+    const socket = net.connect('/tmp/tiarra-control/tiarra');
+    socket.write(msg);
+    socket.destroy();
+    res.sendStatus(200);
   });
 
   app.listen(argv.port || 21877, () => {});

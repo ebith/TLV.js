@@ -16,6 +16,7 @@ window.addEventListener('load', () => {
   const app = new Vue({
     el: '#app',
     data: {
+      info: {},
       isOptionsModalActive: false,
       mute: false,
       volume: 0.5,
@@ -51,6 +52,11 @@ window.addEventListener('load', () => {
   source.addEventListener('message', (msg) => {
     msg = JSON.parse(msg.data);
 
+    if (msg.info) {
+      app.info = msg.info;
+      return;
+    }
+
     if (!msg.is_notice) {
       const utter = new SpeechSynthesisUtterance(msg.log.replace(/(https?:\/\/\S+)/, 'URL省略'));
       utter.voice = voices[0];
@@ -60,4 +66,11 @@ window.addEventListener('load', () => {
 
     app.log.push(msg);
   });
+
+  setTimeout(() => {
+    axios.post('/say', {
+      notice: true,
+      text: `${app.info.hostname}がTLV.js見てる`
+    });
+  }, 10000);
 });
