@@ -1,8 +1,7 @@
 import './index.css';
 
 import Vue from 'vue';
-import VueResource from 'vue-resource';
-Vue.use(VueResource);
+import axios from 'axios';
 
 import Buefy from 'buefy';
 import 'buefy/lib/buefy.css';
@@ -34,20 +33,16 @@ window.addEventListener('load', () => {
         }
       },
       getLog: function () {
-        this.$http.get(`/recent.json?skip=${this.skip}&limit=20`).then((response) => {
-          response.json().then((json) => {
-            this.log = json.concat(this.log);
-            this.skip += json.length;
-          });
+        axios.get(`/recent.json?skip=${this.skip}&limit=20`).then((res) => {
+          this.log = res.data.concat(this.log);
+          this.skip += res.data.length;
         });
       },
     },
     created: function () {
-      this.$http.get('/recent.json').then((response) => {
-        response.json().then((json) => {
-          this.log = json;
-          this.skip = json.length;
-        });
+      axios.get('/recent.json').then((res) => {
+        this.log = res.data;
+        this.skip = res.data.length;
       });
     },
   });
