@@ -80,17 +80,18 @@ mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
   });
 
   app.post('/say', (req,res) => {
-    const msg =`NOTIFY System::SendMessage TIARRACONTROL/1.0
-Sender: TLV.js
-Notice: ${req.body.notice ? 'yes' : 'no'}
-Channel: ${req.body.channel ? req.body.channel : argv.channel}
-Charset: UTF-8
-Text: ${req.body.text}
-`
-    const socket = net.connect('/tmp/tiarra-control/tiarra');
-    socket.write(msg);
-    socket.destroy();
-    res.sendStatus(200);
+    const msg =`NOTIFY System::SendMessage TIARRACONTROL/1.0\r\n
+Sender: TLV.js\r\n
+Notice: ${req.body.notice ? 'yes' : 'no'}\r\n
+Channel: ${req.body.channel ? req.body.channel : argv.channel}\r\n
+Charset: UTF-8\r\n
+Text: ${req.body.text}\r\n
+\r\n`;
+    const socket = net.connect('/tmp/tiarra-control/tiarra', () => {
+      socket.write(msg);
+      socket.end();
+      res.sendStatus(200);
+    });
   });
 
   app.listen(argv.port || 21877, () => {});
