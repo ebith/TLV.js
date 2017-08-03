@@ -17,7 +17,9 @@ window.addEventListener('load', () => {
     el: '#app',
     data: {
       info: {},
+      location: document.location.origin,
       isOptionsModalActive: false,
+      ignore: false,
       mute: false,
       volume: 0.5,
       skip: 0,
@@ -41,6 +43,15 @@ window.addEventListener('load', () => {
       },
     },
     created: function () {
+      const params = new URLSearchParams(document.location.search.substring(1));
+      const mute = params.get('mute');
+      if (mute === 'all') {
+        this.mute = 0.5;
+        this.volume = 0;
+      } else {
+        this.ignore = mute;
+      }
+
       axios.get('/recent.json').then((res) => {
         this.log = res.data;
         this.skip = res.data.length;
@@ -57,7 +68,7 @@ window.addEventListener('load', () => {
       return;
     }
 
-    if (!msg.is_notice) {
+    if (!msg.is_notice && !app.ignore.includes(msg.nick)) {
       const utter = new SpeechSynthesisUtterance(msg.log.replace(/(https?:\/\/\S+)/, 'URL省略'));
       utter.voice = voices[0];
       utter.volume = app.volume;

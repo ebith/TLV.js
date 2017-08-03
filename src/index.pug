@@ -40,3 +40,11 @@ html(lang='ja')
                     label.checkbox
                       input.whyDisplayNone.mr5(type='checkbox', v-on:click='toggleMute')
                       span ミュート
+              hr
+              .usage.content
+                p.is-size-5 特殊な使い方
+                dl
+                  dt URLオプション
+                  dd {{ location }}/?mute=all (読み上げない)
+                    br
+                    | {{ location }}/?mute=name (nameを読み上げない)
