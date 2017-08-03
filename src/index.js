@@ -76,6 +76,11 @@ window.addEventListener('load', () => {
     }
 
     app.log.push(msg);
+    if (document.documentElement.scrollHeight === window.scrollY + window.innerHeight) {
+      Vue.nextTick(() => {
+        window.scrollByLines(3);
+      });
+    }
   });
 
   setTimeout(() => {
