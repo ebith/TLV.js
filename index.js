@@ -80,7 +80,7 @@ mongoClient.connect('mongodb://localhost:27017/tiarra', (err, db) => {
   });
 
   app.post('/say', (req,res) => {
-    if (process.env.NODE_ENV = 'development') {
+    if (process.env.NODE_ENV === 'development') {
       res.sendStatus(200);
       return;
     }

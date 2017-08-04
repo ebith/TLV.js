@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
       info: {},
       location: document.location.origin,
       isOptionsModalActive: false,
-      ignore: false,
+      ignore: '',
       mute: false,
       volume: 0.5,
       skip: 0,
