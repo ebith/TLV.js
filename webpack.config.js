@@ -18,27 +18,28 @@ module.exports = {
   module: {
     rules: [
       { test: /\.pug$/, use: 'pug-loader' },
-      { test: /\.js$/, use: ['eslint-loader'], enforce: 'pre'},
-      { test: /\.js$/, use: ['babel-loader']},
+      { test: /\.js$/, use: ['eslint-loader'], enforce: 'pre' },
+      { test: /\.js$/, use: ['babel-loader'], exclude: /node_modules/ },
       { test: /\.css$/, use: [ 'style-loader', 'css-loader?minimize' ] },
     ]
   },
   resolve: {
-    alias: {}
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
   },
   node: {
-    buffer: false
+    Buffer: false
   },
   devServer: {
     disableHostCheck: true,
     host: '0.0.0.0',
-    contentBase: path.join(__dirname, "public"),
     proxy: {
       '*': 'http://127.0.0.1:21877/'
     }
   }
 };
-module.exports.resolve.alias.vue = process.env.NODE_ENV === 'production' ? 'vue/dist/vue.min.js' : 'vue/dist/vue.js'
+
 if (process.env.NODE_ENV === 'production') {
   module.exports.plugins.push(new babili({}));
-}
+};
