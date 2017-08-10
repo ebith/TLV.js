@@ -37,9 +37,18 @@ module.exports = {
     proxy: {
       '*': 'http://127.0.0.1:21877/'
     }
-  }
+  },
+  devtool: '#eval-source-map'
 };
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.plugins.push(new babili({}));
+  module.exports.devtool = '#source-map';
+  module.exports.plugins = module.exports.plugins.concat([
+    new babili({}),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+  ]);
 };

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "back": "chokidar ./index.js -c 'node index.js' --initial",
+    "back": "NODE_ENV=development node index.js",
     "front": "NODE_ENV=development webpack-dev-server",
     "build": "NODE_ENV=production webpack"
   },
