@@ -38,11 +38,9 @@ module.exports = {
       '*': 'http://127.0.0.1:21877/'
     }
   },
-  devtool: '#eval-source-map'
 };
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map';
   module.exports.plugins = module.exports.plugins.concat([
     new babili({}),
     new webpack.DefinePlugin({
