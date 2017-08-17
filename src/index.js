@@ -45,11 +45,11 @@ window.addEventListener('load', () => {
     },
     created: function () {
       const params = new URLSearchParams(document.location.search.substring(1));
-      const mute = params.get('mute');
+      const mute = params.get('mute') || false;
       if (mute === 'all') {
         this.mute = 0.5;
         this.volume = 0;
-      } else {
+      } else if (mute !== false) {
         this.ignore = mute;
       }
 
