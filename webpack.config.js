@@ -1,5 +1,5 @@
 const path = require('path');
-const babili = require('babili-webpack-plugin');
+const minifyPlugin = require('babel-minify-webpack-plugin');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const scriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const webpack = require('webpack');
@@ -42,7 +42,7 @@ module.exports = {
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.plugins = module.exports.plugins.concat([
-    new babili({}),
+    new minifyPlugin({}, { comments: /forOneLine/ }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
