@@ -65,7 +65,7 @@ sub _load_schema {
     
 	$param->{charset} = $self->config->charset;
 
-    my $client = MongoDB::MongoClient->new;
+    my $client = MongoDB::MongoClient->new(timeout=> 5000);
     my $database = $client->get_database('tiarra');
     my $log = $database->get_collection('logs');
     $log->ensure_index({timestamp => -1}, {background => boolean::true});
@@ -94,6 +94,8 @@ sub store {
     }
 
     $log->insert({
+    utf8::decode($param->{log});
+    utf8::decode($param->{channel});
       is_notice => $is_notice,
       log => $param->{log},
       nick => $param->{nick},
