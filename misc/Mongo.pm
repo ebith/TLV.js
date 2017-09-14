@@ -68,8 +68,8 @@ sub _load_schema {
     my $client = MongoDB::MongoClient->new(timeout=> 5000);
     my $database = $client->get_database('tiarra');
     my $log = $database->get_collection('logs');
-    $log->ensure_index({timestamp => -1}, {background => boolean::true});
-    $database->run_command({create => 'recents', capped => boolean::true, size => 1048576});
+    # $log->ensure_index({timestamp => -1}, {background => boolean::true});
+    # $database->run_command({create => 'recents', capped => boolean::true, size => 1048576});
     my $recent = $database->get_collection('recents');
 
     $self->{log} = $log;
@@ -93,16 +93,17 @@ sub store {
       sleep 1;
     }
 
-    $log->insert({
     utf8::decode($param->{log});
     utf8::decode($param->{channel});
+
+    $log->insert_one({
       is_notice => $is_notice,
       log => $param->{log},
       nick => $param->{nick},
       channel => $param->{channel},
       timestamp => DateTime->now
     });
-    $recent->insert({
+    $recent->insert_one({
       is_notice => $is_notice,
       log => $param->{log},
       nick => $param->{nick},
