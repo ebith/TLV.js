@@ -2,7 +2,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": ["Firefox ESR", "last 2 Chrome versions"]
+        "browsers": ["Firefox ESR", "last 2 Chrome versions", "iOS 10"]
       }
     }]
   ]
